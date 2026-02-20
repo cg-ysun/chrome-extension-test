@@ -67,3 +67,14 @@ jobs:
             --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \
             --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \
             --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
+
+      - name: Notify Slack
+        if: success()
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "✅ Chrome Extension (Beta) has been submitted for review.\nTag: ${{ github.ref_name }}\nCommit: ${{ github.sha }}"
+            }
