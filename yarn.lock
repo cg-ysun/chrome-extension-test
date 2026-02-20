@@ -1735,6 +1735,49 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cargurus/chrome-extension-test@workspace:packages/chrome-extension-test":
+  version: 0.0.0-use.local
+  resolution: "@cargurus/chrome-extension-test@workspace:packages/chrome-extension-test"
+  dependencies:
+    "@cargurus/eslint-config": 0.0.5
+    "@cargurus/prettier-config": 0.0.4
+    "@cargurus/typeless": ^1.1.1
+    "@cargurus/vite-plugin-yalc": ^0.4.0
+    "@rollup/plugin-typescript": ^11.1.1
+    "@storybook/addon-essentials": ^7.0.18
+    "@storybook/addon-interactions": ^7.0.18
+    "@storybook/addon-links": ^7.0.18
+    "@storybook/blocks": ^7.0.18
+    "@storybook/react": ^7.0.18
+    "@storybook/react-vite": ^7.0.18
+    "@storybook/testing-library": ^0.0.14-next.2
+    "@testing-library/jest-dom": ^5.17.0
+    "@testing-library/react": ^14.0.0
+    "@types/node": ^20.2.5
+    "@vitejs/plugin-react": ^4.3.4
+    "@vitest/coverage-v8": ^3.0.8
+    enzyme: 3.10.0
+    eslint: ^8.51.0
+    happy-dom: ^20.0.2
+    less: ^4.2.0
+    npm-run-all: ^4.1.5
+    prettier: ^3.0.3
+    prop-types: ^15.8.1
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    rollup-plugin-visualizer: ^5.14.0
+    storybook: ^7.0.18
+    stylelint: 7.13.0
+    tslib: ^2.5.3
+    typescript: ^5.1.3
+    vite: ^6.4.1
+    vite-plugin-dts: ^4.5.3
+    vite-plugin-libcss: ^1.1.1
+    vite-tsconfig-paths: ^5.1.4
+    vitest: ^3.0.8
+  languageName: unknown
+  linkType: soft
+
 "@cargurus/eslint-config@npm:0.0.5":
   version: 0.0.5
   resolution: "@cargurus/eslint-config@npm:0.0.5::__archiveUrl=https%3A%2F%2Fartifacts.na.c-gurus.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Fnpm-registry%2F%40cargurus%2Feslint-config%2F-%2F%40cargurus%2Feslint-config-0.0.5.tgz"
@@ -1779,49 +1822,6 @@ __metadata:
   checksum: 73d9eedf237dbc5de83f01ef30d69a0c050527664e07ba9eb91e40c0590d7039a0ecc0c40c8a3246478388dc255f3e3a801a11243e10b1fa34a2d8fc19f0bb24
   languageName: node
   linkType: hard
-
-"@cargurus/sample-jsx-library@workspace:packages/sample-jsx-library":
-  version: 0.0.0-use.local
-  resolution: "@cargurus/sample-jsx-library@workspace:packages/sample-jsx-library"
-  dependencies:
-    "@cargurus/eslint-config": 0.0.5
-    "@cargurus/prettier-config": 0.0.4
-    "@cargurus/typeless": ^1.1.1
-    "@cargurus/vite-plugin-yalc": ^0.4.0
-    "@rollup/plugin-typescript": ^11.1.1
-    "@storybook/addon-essentials": ^7.0.18
-    "@storybook/addon-interactions": ^7.0.18
-    "@storybook/addon-links": ^7.0.18
-    "@storybook/blocks": ^7.0.18
-    "@storybook/react": ^7.0.18
-    "@storybook/react-vite": ^7.0.18
-    "@storybook/testing-library": ^0.0.14-next.2
-    "@testing-library/jest-dom": ^5.17.0
-    "@testing-library/react": ^14.0.0
-    "@types/node": ^20.2.5
-    "@vitejs/plugin-react": ^4.3.4
-    "@vitest/coverage-v8": ^3.0.8
-    enzyme: 3.10.0
-    eslint: ^8.51.0
-    happy-dom: ^20.0.2
-    less: ^4.2.0
-    npm-run-all: ^4.1.5
-    prettier: ^3.0.3
-    prop-types: ^15.8.1
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    rollup-plugin-visualizer: ^5.14.0
-    storybook: ^7.0.18
-    stylelint: 7.13.0
-    tslib: ^2.5.3
-    typescript: ^5.1.3
-    vite: ^6.4.1
-    vite-plugin-dts: ^4.5.3
-    vite-plugin-libcss: ^1.1.1
-    vite-tsconfig-paths: ^5.1.4
-    vitest: ^3.0.8
-  languageName: unknown
-  linkType: soft
 
 "@cargurus/typeless@npm:^1.1.1":
   version: 1.1.1

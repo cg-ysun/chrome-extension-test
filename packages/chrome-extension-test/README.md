@@ -1,4 +1,4 @@
-# cargurus-sample-library
+# Chrome Extension Test
 
 ## Storybook
 

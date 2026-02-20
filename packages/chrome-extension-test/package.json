@@ -1,7 +1,7 @@
 {
-    "name": "@cargurus/sample-jsx-library",
+    "name": "@cargurus/chrome-extension-test",
     "version": "0.0.0",
-    "description": "Example of an npm library that contains jsx",
+    "description": "Chrome Extension Test",
     "author": "CarGurus",
     "repository": {
         "url": "https://code.cargurus.com/cargurus-eng/cargurus-npm-library-template",
@@ -17,6 +17,7 @@
     "scripts": {
         "all": "rm -rf .eslintcache && npm-run-all --parallel lint test",
         "build": "vite build --config \"./vite.config.mts\"",
+        "build:extension": "vite build --config \"./vite.extension.config.mts\"",
         "build:watch": "yarn run build --watch",
         "dev": "npm-run-all --parallel build:watch typeless:watch",
         "coverage": "yarn test --coverage",

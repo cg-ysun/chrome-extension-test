@@ -1,5 +1,8 @@
 HELP.md
 target/
+packages/chrome-extension-test/extension-dist
+packages/chrome-extension-test/public
+packages/chrome-extension-test/extension-dist.zip
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
