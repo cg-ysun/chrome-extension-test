@@ -1,0 +1,8 @@
+* @cargurus-eng/pp-frontend-platform
+
+/package.json @cargurus-eng/devx-tools @cargurus-eng/pp-frontend-platform
+/CODEOWNERS @cargurus-eng/devx-tools @cargurus-eng/pp-frontend-platform
+
+# Don't require pp-frontend-platform reviews
+# on changesets version upgrades
+.changeset

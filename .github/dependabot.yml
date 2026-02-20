@@ -1,0 +1,44 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+registries:
+  maven-artifactory:
+    type: maven-repository
+    url: https://artifacts.na.c-gurus.com/artifactory/maven-repository
+
+    #replaces-base: true # have to comment this out due to bug in version of Dependabot on CG version of Github enterprise
+
+    # these Artifactory credentials must be provided, because Github expects these fields to have values
+    # and Artifactory will return 403 for bogus values
+    # Add secrets via https://code.cargurus.com/cargurus-eng/app-shell-client/settings/secrets/dependabot
+    # or through call to REST API
+    username: ${{secrets.ARTIFACTORY_USERNAME}}
+    password: ${{secrets.ARTIFACTORY_TOKEN}}
+updates:
+  # each subtree represents a dependency-update job for either default branch in the repo or for a specific target-branch
+  - package-ecosystem: "maven"
+
+    # for now, only managing pipeline-maven-plugin
+    target-branch: "pipeline"
+
+    directory: "/" # Location of package manifests
+    registries:
+      - maven-artifactory
+    schedule:
+      interval: "daily"
+
+    # Have Taillight notify subscribed channels that Dependabot has opened a PR
+    labels:
+      - "Review Requested"
+
+    # Satisfy SOX compliance check
+    commit-message:
+      prefix: "ARCH-2815"
+
+    ignore:
+      # For all com.cargurus packages, ignore all major version updates
+      - dependency-name: "com.cargurus:*"
+        update-types: ["version-update:semver-major"]

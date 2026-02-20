@@ -1,0 +1,11 @@
+# Package specific rules
+
+# Typescript
+dist
+
+# Storybook
+storybook-static
+
+# build visualizer
+stats.html
+stats.json

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "skipLibCheck": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "allowSyntheticDefaultImports": true,
+        "strictNullChecks": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true
+    },
+    "include": ["vite.config.mts", "vitest.config.mts", "test/setup-test-env.ts", "package.json"]
+}

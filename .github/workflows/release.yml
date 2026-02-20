@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  HUSKY: 0
+  HOME: ${{ github.workspace }} 
+  NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions: {}
+jobs:
+  release:
+    name: Release
+    runs-on: [arc-ent]
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      packages: write
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          check-latest: true
+          
+      - name: Setup package managers
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Set commit message
+        id: commit-message
+        env:
+          RAW_COMMIT_MESSAGE: ${{github.event.head_commit.message}}
+        run: |
+          edited_commit_message="$(echo "$RAW_COMMIT_MESSAGE" | head -n1 | cut -c1-250)"
+          echo "COMMIT_MESSAGE=$edited_commit_message" >> $GITHUB_OUTPUT
+
+      - name: Create Release Pull Request
+        id: changesets
+        uses: changesets/action@v1.4.7
+        with: 
+          title: "${{ steps.commit-message.outputs.COMMIT_MESSAGE }}"
+          commit: "${{ steps.commit-message.outputs.COMMIT_MESSAGE }}"
+          

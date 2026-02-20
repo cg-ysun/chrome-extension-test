@@ -1,0 +1,77 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+# build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### yarn ###
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Swap the comments on the following lines if you don't wish to use zero-installs
+# Documentation here: https://yarnpkg.com/features/zero-installs
+# !.yarn/cache
+#.pnp.*
+
+coverage
+**/report/unit
+
+.editorconfig
+.pnp.cjs
+.pnp.loader.mjs
+node_modules
+
+.turbo
+!.turbo/config.json
+.idea/
+
+.eslintcache
+
+**/.DS_Store
+
+# Typescript
+dist/
+
+# Storybook
+storybook-static
+
+# Creds file
+.netrc
+
+# corepack cache gets pushed up with changeset release PR, ignore it
+.cache
+
+# npm cache
+.npm/
