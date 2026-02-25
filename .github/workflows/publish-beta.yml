@@ -61,7 +61,7 @@ jobs:
 
       - name: Upload to Chrome Web Store
         run: |-
-          chrome-webstore-upload \
+          chrome-webstore-upload publish --trusted-testers \
             --source extension-dist.zip \
             --extension-id ${{ env.EXTENSION_ID }} \
             --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \
