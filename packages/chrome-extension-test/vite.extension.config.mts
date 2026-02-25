@@ -25,10 +25,14 @@ function chromeExtensionBuild(): Plugin {
             });
             writeFileSync(path.resolve(outDir, 'manifest.json'), manifest);
 
-            // Copy popup.html
+            // Copy popup.html and popup.js
             copyFileSync(
                 path.resolve(__dirname, 'src/popup.html'),
                 path.resolve(outDir, 'popup.html'),
+            );
+            copyFileSync(
+                path.resolve(__dirname, 'src/popup.js'),
+                path.resolve(outDir, 'popup.js'),
             );
 
             console.log('Chrome extension files written to', outDir);

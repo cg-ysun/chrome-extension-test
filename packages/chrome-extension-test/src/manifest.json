@@ -5,7 +5,7 @@
   "description": "__VITE_MANIFEST_DESCRIPTION__",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Hello World"
+    "default_title": "Word & Character Counter"
   },
   "key": "__VITE_MANIFEST_KEY__"
 }
