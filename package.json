@@ -1,10 +1,7 @@
 {
-  "name": "cargurus-npm-library-template",
+  "name": "chrome-extension-test-root",
   "version": "1.0.0",
   "packageManager": "yarn@3.6.4",
-  "publishConfig": {
-    "registry": "https://artifacts.na.c-gurus.com/artifactory/api/npm/npm-registry/"
-  },
   "private": true,
   "workspaces": [
     "packages/*"
