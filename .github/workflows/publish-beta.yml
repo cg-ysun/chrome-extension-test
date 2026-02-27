@@ -17,7 +17,7 @@ permissions: {}
 jobs:
   build:
     name: Build Chrome Extension (Beta)
-    runs-on: arc-ent
+    runs-on: arc-ent-arm
     permissions:
       contents: read
     steps:
@@ -47,7 +47,7 @@ jobs:
 
   upload:
     name: Upload to Chrome Web Store (Beta)
-    runs-on: arc-ent
+    runs-on: arc-ent-arm
     needs: build
     steps:
       - name: Setup Node

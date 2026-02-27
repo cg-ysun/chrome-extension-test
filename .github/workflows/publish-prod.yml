@@ -17,7 +17,7 @@ permissions: {}
 jobs:
   check-beta:
     name: Verify beta tag exists
-    runs-on: arc-ent
+    runs-on: arc-ent-arm
     permissions:
       contents: read
     steps:
@@ -41,7 +41,7 @@ jobs:
 
   build:
     name: Build Chrome Extension
-    runs-on: arc-ent
+    runs-on: arc-ent-arm
     needs: check-beta
     permissions:
       contents: read
@@ -72,7 +72,7 @@ jobs:
 
   upload:
     name: Upload to Chrome Web Store
-    runs-on: [arc-ent]
+    runs-on: arc-ent-arm
     needs: build
     steps:
       - name: Setup Node
@@ -97,13 +97,13 @@ jobs:
             --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \
             --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
 
-      - name: Notify Slack
-        if: success()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": "✅ Chrome Extension (Prod) submitted for review.\nTag: ${{ github.ref_name }} | Commit: ${{ github.sha }}\nReview may take hours to days. Check status in the Chrome Web Store dashboard, or the extension will auto-update once approved."
-            }
+#      - name: Notify Slack
+#        if: success()
+#        uses: slackapi/slack-github-action@v2.0.0
+#        with:
+#          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+#          webhook-type: incoming-webhook
+#          payload: |
+#            {
+#              "text": "✅ Chrome Extension (Prod) submitted for review.\nTag: ${{ github.ref_name }} | Commit: ${{ github.sha }}\nReview may take hours to days. Check status in the Chrome Web Store dashboard, or the extension will auto-update once approved."
+#            }
