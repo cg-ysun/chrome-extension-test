@@ -7,13 +7,17 @@ on:
 
 env:
   EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID_BETA }}
+  HUSKY: 0
+  HOME: ${{ github.workspace }}
+  NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 permissions: {}
 
 jobs:
   build:
     name: Build Chrome Extension (Beta)
-    runs-on: [arc-ent]
+    runs-on: arc-ent
     permissions:
       contents: read
     steps:
@@ -43,7 +47,7 @@ jobs:
 
   upload:
     name: Upload to Chrome Web Store (Beta)
-    runs-on: ubuntu-latest
+    runs-on: arc-ent
     needs: build
     steps:
       - name: Setup Node

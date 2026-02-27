@@ -7,13 +7,17 @@ on:
 
 env:
   EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID_PROD }}
+  HUSKY: 0
+  HOME: ${{ github.workspace }}
+  NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 permissions: {}
 
 jobs:
   check-beta:
     name: Verify beta tag exists
-    runs-on: ubuntu-latest
+    runs-on: arc-ent
     permissions:
       contents: read
     steps:
@@ -37,7 +41,7 @@ jobs:
 
   build:
     name: Build Chrome Extension
-    runs-on: ubuntu-latest
+    runs-on: arc-ent
     needs: check-beta
     permissions:
       contents: read
