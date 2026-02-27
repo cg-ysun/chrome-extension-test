@@ -13,7 +13,7 @@ permissions: {}
 jobs:
   build:
     name: Build Chrome Extension (Beta)
-    runs-on: ubuntu-latest
+    runs-on: [arc-ent]
     permissions:
       contents: read
     steps:
