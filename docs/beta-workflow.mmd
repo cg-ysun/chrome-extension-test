@@ -1,0 +1,30 @@
+sequenceDiagram
+    actor Dev as Developer
+    participant GH as GitHub
+    participant GHA as GitHub Actions
+    participant CLI as chrome-webstore-upload-cli
+    participant OAuth as Google OAuth
+    participant CWS as Chrome Web Store
+
+    Dev->>GH: Create release (tag: beta-v1.0.1)
+    GH->>GHA: Trigger publish-beta workflow
+
+    rect rgb(240, 240, 240)
+        Note over GHA: Build Job
+        GHA->>GHA: Checkout code
+        GHA->>GHA: yarn install
+        GHA->>GHA: Run build-extension.sh<br/>(load .env → Vite build → zip)
+        GHA->>GHA: Upload artifact
+    end
+
+    rect rgb(240, 240, 240)
+        Note over GHA: Upload Job
+        GHA->>CLI: chrome-webstore-upload --trustedTesters
+        CLI->>OAuth: Exchange refresh token for access token
+        OAuth-->>CLI: Access token
+        CLI->>CWS: Upload extension-dist.zip
+        CWS-->>CLI: Upload success
+        CLI-->>GHA: Done
+    end
+
+    GHA-->>Dev: Slack notification ✅

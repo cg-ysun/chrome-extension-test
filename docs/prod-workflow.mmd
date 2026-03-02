@@ -1,0 +1,38 @@
+sequenceDiagram
+    actor Dev as Developer
+    participant GH as GitHub
+    participant GHA as GitHub Actions
+    participant CLI as chrome-webstore-upload-cli
+    participant OAuth as Google OAuth
+    participant CWS as Chrome Web Store
+
+    Dev->>GH: Create release (tag: v1.0.1)
+    GH->>GHA: Trigger publish-prod workflow
+
+    rect rgb(255, 245, 238)
+        Note over GHA: Pre-check Job
+        GHA->>GH: Does tag beta_v1.0.1 exist?
+        alt Beta tag missing
+            GH-->>GHA: ❌ Not found
+            GHA-->>Dev: Workflow fails
+        else Beta tag exists
+            GH-->>GHA: ✅ Found
+        end
+    end
+
+    rect rgb(240, 240, 240)
+        Note over GHA: Build Job
+        GHA->>GHA: Checkout → install → build → zip → upload artifact
+    end
+
+    rect rgb(240, 240, 240)
+        Note over GHA: Upload Job
+        GHA->>CLI: chrome-webstore-upload
+        CLI->>OAuth: Exchange refresh token
+        OAuth-->>CLI: Access token
+        CLI->>CWS: Upload extension-dist.zip
+        CWS-->>CLI: Upload success
+        CLI-->>GHA: Done
+    end
+
+    GHA-->>Dev: Slack notification ✅

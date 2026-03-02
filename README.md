@@ -1,39 +1,39 @@
-# cargurus-npm-library-template
-Frontend libraries for use by site-static and multi-repo frontend applications.
+# Chrome Extension — Automated Deployment
 
-## Installation
+Automated CI/CD pipeline for publishing a Chrome extension to the Chrome Web Store via GitHub Actions.
 
-Modules published by this template can be added to a project via `yarn add`. `babel-config`, `jest-suite`, and the `eslint` modules should be added as dev dependencies. Specify the appropriate major version to ensure that the remote module is properly referenced.
-* i.e. `yarn add @cargurus/sample-library@^0.0.0`
+## How to Deploy
 
-## Adding another package
-We use the utility `@cargurus/create-package` to create new packages within this monorepo.
-* First, make sure we are in the `./packages` directory
-* `npx @cargurus/create-package --help` will show us our options for the `--type` argument
-* Then, as an example, if we want to create a `react` package, we can run `npx @cargurus/create-package -t react @cargurus/my-sweet-package`
+### Beta (trusted testers)
 
-## Local Development
+1. Go to **Releases** → **Draft a new release**
+2. Create a new tag: `beta-v1.0.1`
+3. Publish the release — workflow builds, uploads to CWS with trusted testers visibility, and notifies Slack
 
-To test your changes across repos, see this guide below:
+### Production
 
-https://cargurus.atlassian.net/wiki/spaces/EP/pages/3791323360/Using+Yalc+for+fast+package+development+in+Frontend+Multirepo
+1. Go to **Releases** → **Draft a new release**
+2. Create a new tag: `v1.0.1`
+3. Publish the release — workflow verifies a matching beta tag exists, builds, uploads to CWS publicly, and notifies Slack
 
-## How to pull latest template into your repository
+> **Safety gate:** Prod deployment is blocked unless a matching beta release (`beta_v1.0.1`) already exists.
 
+## Workflow Sequence Diagrams
 
-> **Note: Highly recommended this is done on Day 1 of the template usage to avoid conflicts after you remove & rename packages.**
+### Beta Workflow
 
+![Beta Workflow](docs/beta-workflow.png)
 
-1. Add this template as a remote to your repo
+### Production Workflow
 
-    `git remote add template https://code.cargurus.com/cargurus-eng/cargurus-npm-library-template.git`
+![Production Workflow](docs/prod-workflow.png)
 
-2. Fetch updated changes
+## GitHub Secrets Required
 
-    `git fetch --all`
-
-3. Merge template branch
-
-    `git merge template/main --allow-unrelated-histories`
-
-4. Resolve conflicts
+| Secret | Purpose |
+|--------|---------|
+| `CHROME_EXTENSION_ID_PROD` / `_BETA` | Extension IDs |
+| `CI_GOOGLE_CLIENT_ID` | OAuth client ID |
+| `CI_GOOGLE_CLIENT_SECRET` | OAuth client secret |
+| `CI_GOOGLE_REFRESH_TOKEN` | OAuth refresh token for CWS API |
+| `SLACK_WEBHOOK_URL` | Slack notifications |
