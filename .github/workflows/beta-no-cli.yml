@@ -98,22 +98,22 @@ jobs:
           fi
           echo "✅ Upload successful"
 
-      - name: Publish to trusted testers
-        run: |
-          RESPONSE=$(curl -s -X POST \
-            "https://www.googleapis.com/chrome/v2/items/${{ env.EXTENSION_ID }}:publish" \
-            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
-            -H "Content-Type: application/json" \
-            -d '{"deployTarget": "TRUSTED_TESTERS"}')
-
-          echo "$RESPONSE" | jq .
-
-          STATUS=$(echo "$RESPONSE" | jq -r '.status // .error.code // "UNKNOWN"')
-          if [ "$STATUS" = "error" ] || echo "$STATUS" | grep -qi "error"; then
-            echo "❌ Publish failed"
-            exit 1
-          fi
-          echo "✅ Published to trusted testers"
+#      - name: Publish to trusted testers
+#        run: |
+#          RESPONSE=$(curl -s -X POST \
+#            "https://www.googleapis.com/chrome/v2/items/${{ env.EXTENSION_ID }}:publish" \
+#            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
+#            -H "Content-Type: application/json" \
+#            -d '{"deployTarget": "TRUSTED_TESTERS"}')
+#
+#          echo "$RESPONSE" | jq .
+#
+#          STATUS=$(echo "$RESPONSE" | jq -r '.status // .error.code // "UNKNOWN"')
+#          if [ "$STATUS" = "error" ] || echo "$STATUS" | grep -qi "error"; then
+#            echo "❌ Publish failed"
+#            exit 1
+#          fi
+#          echo "✅ Published to trusted testers"
 
 #      - name: Notify Slack
 #        if: success()
