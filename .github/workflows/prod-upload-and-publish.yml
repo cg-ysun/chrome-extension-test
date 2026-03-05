@@ -22,18 +22,29 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check for matching beta tag
+      - name: Check for matching beta tag and verify same commit
         run: |
           # Extract version from tag (v1.2.3 -> 1.2.3)
           VERSION="${GITHUB_REF_NAME#v}"
           BETA_TAG="beta-v${VERSION}"
-          if git tag --list | grep -q "^${BETA_TAG}$"; then
-            echo "✅ Found matching beta tag: ${BETA_TAG}"
-          else
+          if ! git tag --list | grep -q "^${BETA_TAG}$"; then
             echo "❌ No matching beta tag found: ${BETA_TAG}"
             echo "You must publish and verify changes for beta first before publishing to prod."
             exit 1
           fi
+          echo "✅ Found matching beta tag: ${BETA_TAG}"
+
+          # Verify both tags point to the same commit
+          PROD_COMMIT=$(git rev-list -n 1 "$GITHUB_REF_NAME")
+          BETA_COMMIT=$(git rev-list -n 1 "$BETA_TAG")
+          if [ "$PROD_COMMIT" != "$BETA_COMMIT" ]; then
+            echo "❌ Commit mismatch!"
+            echo "   Prod tag ($GITHUB_REF_NAME) points to: $PROD_COMMIT"
+            echo "   Beta tag ($BETA_TAG) points to:        $BETA_COMMIT"
+            echo "Both tags must point to the same commit."
+            exit 1
+          fi
+          echo "✅ Both tags point to the same commit: $PROD_COMMIT"
 
   build:
     name: Build Chrome Extension

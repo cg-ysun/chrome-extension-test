@@ -2,12 +2,11 @@ sequenceDiagram
     actor Dev as Developer
     participant GH as GitHub
     participant GHA as GitHub Actions
-    participant CLI as chrome-webstore-upload-cli
     participant OAuth as Google OAuth
-    participant CWS as Chrome Web Store
+    participant CWS as Chrome Web Store API v2
 
     Dev->>GH: Create release (tag: v1.0.1)
-    GH->>GHA: Trigger publish-prod workflow
+    GH->>GHA: Trigger prod-upload-and-publish workflow
 
     rect rgb(255, 245, 238)
         Note over GHA: Pre-check Job
@@ -18,6 +17,13 @@ sequenceDiagram
         else Beta tag exists
             GH-->>GHA: ✅ Found
         end
+        GHA->>GH: Do both tags point to same commit?
+        alt Commit mismatch
+            GH-->>GHA: ❌ Different commits
+            GHA-->>Dev: Workflow fails
+        else Same commit
+            GH-->>GHA: ✅ Matched
+        end
     end
 
     rect rgb(240, 240, 240)
@@ -27,17 +33,23 @@ sequenceDiagram
         alt Version mismatch
             GHA-->>Dev: ❌ Workflow fails
         end
-        GHA->>GHA: yarn install → build → zip → upload artifact
+        GHA->>GHA: yarn install
+        GHA->>GHA: Run build-extension.sh<br/>(load .env → Vite build → zip)
+        GHA->>GHA: Upload artifact
     end
 
     rect rgb(240, 240, 240)
         Note over GHA: Upload Job
-        GHA->>CLI: chrome-webstore-upload
-        CLI->>OAuth: Exchange refresh token
-        OAuth-->>CLI: Access token
-        CLI->>CWS: Upload extension-dist.zip
-        CWS-->>CLI: Upload success
-        CLI-->>GHA: Done
+        GHA->>OAuth: curl POST /token (refresh token)
+        OAuth-->>GHA: Access token
+        GHA->>CWS: curl POST /items/:upload (extension-dist.zip)
+        CWS-->>GHA: Upload success
     end
 
-    GHA-->>Dev: Slack notification ✅
+    alt Any job fails
+        rect rgb(255, 235, 235)
+            Note over GHA: Cleanup Job
+            GHA->>GH: Delete release via GitHub API
+            GHA->>GH: Delete tag via GitHub API
+        end
+    end
