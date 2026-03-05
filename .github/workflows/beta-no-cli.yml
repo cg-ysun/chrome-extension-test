@@ -83,8 +83,8 @@ jobs:
 
       - name: Upload to Chrome Web Store
         run: |
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT \
-            "https://www.googleapis.com/upload/chromewebstore/v2/items/${{ env.EXTENSION_ID }}" \
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://chromewebstore.googleapis.com/upload/v2/publishers/${{ secrets.CHROME_PUBLISHER_ID }}/items/${{ env.EXTENSION_ID }}:upload" \
             -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
             -H "Content-Type: application/zip" \
             -T extension-dist.zip)
@@ -104,7 +104,7 @@ jobs:
 #      - name: Publish to trusted testers
 #        run: |
 #          RESPONSE=$(curl -s -X POST \
-#            "https://www.googleapis.com/chromewebstore/v2/items/${{ env.EXTENSION_ID }}:publish" \
+#            "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.CHROME_PUBLISHER_ID }}/items/${{ env.EXTENSION_ID }}:publish" \
 #            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
 #            -H "Content-Type: application/json" \
 #            -d '{"deployTarget": "TRUSTED_TESTERS"}')
