@@ -1,4 +1,4 @@
-name: Fetch Beta Extension Status
+name: Beta - Fetch Status
 
 on:
   workflow_dispatch:

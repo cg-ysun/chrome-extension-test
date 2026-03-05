@@ -1,4 +1,4 @@
-name: Publish Chrome Extension (Beta) - No CLI
+name: Beta - Upload and Publish
 
 on:
   push:

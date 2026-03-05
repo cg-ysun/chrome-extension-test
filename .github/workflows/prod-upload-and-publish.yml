@@ -1,4 +1,4 @@
-name: Publish Chrome Extension (Prod) - No CLI
+name: Prod - Upload and Publish
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Fetch Prod Extension Status
+name: Prod - Fetch Status
 
 on:
   workflow_dispatch:
