@@ -45,6 +45,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify tag matches manifest version
+        working-directory: packages/chrome-extension-test
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          MANIFEST_VERSION=$(grep '^VITE_MANIFEST_EXTENSION_VERSION=' .env | cut -d'"' -f2)
+          if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "❌ Tag version ($TAG_VERSION) does not match manifest version ($MANIFEST_VERSION)"
+            exit 1
+          fi
+          echo "✅ Tag version matches manifest version: $TAG_VERSION"
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
