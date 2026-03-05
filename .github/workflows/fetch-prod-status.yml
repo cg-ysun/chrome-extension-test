@@ -1,0 +1,51 @@
+name: Fetch Prod Extension Status
+
+on:
+  workflow_dispatch:
+
+env:
+  EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID_PROD }}
+
+permissions: {}
+
+jobs:
+  fetch-status:
+    name: Fetch Chrome Web Store Status (Prod)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get access token
+        id: auth
+        run: |
+          RESPONSE=$(curl -s -X POST https://oauth2.googleapis.com/token \
+            -d "client_id=${{ secrets.CI_GOOGLE_CLIENT_ID }}" \
+            -d "client_secret=${{ secrets.CI_GOOGLE_CLIENT_SECRET }}" \
+            -d "refresh_token=${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}" \
+            -d "grant_type=refresh_token")
+
+          ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token')
+          if [ "$ACCESS_TOKEN" = "null" ] || [ -z "$ACCESS_TOKEN" ]; then
+            echo "❌ Failed to get access token"
+            echo "$RESPONSE" | jq .
+            exit 1
+          fi
+          echo "::add-mask::$ACCESS_TOKEN"
+          echo "access_token=$ACCESS_TOKEN" >> "$GITHUB_OUTPUT"
+          echo "✅ Access token obtained"
+
+      - name: Fetch item status
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.CHROME_PUBLISHER_ID }}/items/${{ env.EXTENSION_ID }}:fetchStatus" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP status: $HTTP_CODE"
+          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "❌ Failed to fetch status with HTTP $HTTP_CODE"
+            exit 1
+          fi
+          echo "✅ Status fetched successfully"
