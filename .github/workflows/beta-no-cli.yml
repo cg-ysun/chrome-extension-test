@@ -83,17 +83,20 @@ jobs:
 
       - name: Upload to Chrome Web Store
         run: |
-          RESPONSE=$(curl -s -X PUT \
-            "https://www.googleapis.com/upload/chrome/v2/items/${{ env.EXTENSION_ID }}" \
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT \
+            "https://www.googleapis.com/upload/chromewebstore/v2/items/${{ env.EXTENSION_ID }}" \
             -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
             -H "Content-Type: application/zip" \
             -T extension-dist.zip)
 
-          echo "$RESPONSE" | jq .
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
 
-          STATUS=$(echo "$RESPONSE" | jq -r '.uploadState // .error.code // "UNKNOWN"')
-          if [ "$STATUS" = "FAILURE" ] || [ "$STATUS" != "SUCCESS" ] && [ "$STATUS" != "IN_PROGRESS" ]; then
-            echo "❌ Upload failed with status: $STATUS"
+          echo "HTTP status: $HTTP_CODE"
+          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "❌ Upload failed with HTTP $HTTP_CODE"
             exit 1
           fi
           echo "✅ Upload successful"
@@ -101,7 +104,7 @@ jobs:
 #      - name: Publish to trusted testers
 #        run: |
 #          RESPONSE=$(curl -s -X POST \
-#            "https://www.googleapis.com/chrome/v2/items/${{ env.EXTENSION_ID }}:publish" \
+#            "https://www.googleapis.com/chromewebstore/v2/items/${{ env.EXTENSION_ID }}:publish" \
 #            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
 #            -H "Content-Type: application/json" \
 #            -d '{"deployTarget": "TRUSTED_TESTERS"}')
