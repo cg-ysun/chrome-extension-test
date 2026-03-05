@@ -1,19 +1,44 @@
-name: Publish Chrome Extension (Beta) - No CLI
+name: Publish Chrome Extension (Prod) - No CLI
 
 on:
   push:
     tags:
-      - 'beta-v*.*.*'
+      - 'v*.*.*'
 
 env:
-  EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID_BETA }}
+  EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID_PROD }}
 
 permissions: {}
 
 jobs:
-  build:
-    name: Build Chrome Extension (Beta)
+  check-beta:
+    name: Verify beta tag exists
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for matching beta tag
+        run: |
+          # Extract version from tag (v1.2.3 -> 1.2.3)
+          VERSION="${GITHUB_REF_NAME#v}"
+          BETA_TAG="beta-v${VERSION}"
+          if git tag --list | grep -q "^${BETA_TAG}$"; then
+            echo "✅ Found matching beta tag: ${BETA_TAG}"
+          else
+            echo "❌ No matching beta tag found: ${BETA_TAG}"
+            echo "You must publish and verify changes for beta first before publishing to prod."
+            exit 1
+          fi
+
+  build:
+    name: Build Chrome Extension
+    runs-on: ubuntu-latest
+    needs: check-beta
     permissions:
       contents: read
     steps:
@@ -23,7 +48,7 @@ jobs:
       - name: Verify tag matches manifest version
         working-directory: packages/chrome-extension-test
         run: |
-          TAG_VERSION="${GITHUB_REF_NAME#beta-v}"
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
           MANIFEST_VERSION=$(grep '^VITE_MANIFEST_EXTENSION_VERSION=' .env | cut -d'"' -f2)
           if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
             echo "❌ Tag version ($TAG_VERSION) does not match manifest version ($MANIFEST_VERSION)"
@@ -44,23 +69,23 @@ jobs:
 
       - name: Build extension
         working-directory: packages/chrome-extension-test
-        run: bash scripts/build-extension.sh prod-private
+        run: bash scripts/build-extension.sh prod
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chrome-extension-beta-${{ github.sha }}
+          name: chrome-extension-prod-${{ github.sha }}
           path: packages/chrome-extension-test/extension-dist.zip
 
   upload:
-    name: Upload to Chrome Web Store (Beta)
+    name: Upload to Chrome Web Store
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: chrome-extension-beta-${{ github.sha }}
+          name: chrome-extension-prod-${{ github.sha }}
 
       - name: Get access token
         id: auth
@@ -103,7 +128,7 @@ jobs:
         # Items are always published with the existing visibility settings.
         # If you have manually changed the settings in the Developer Dashboard,
         # you won't be able to publish using the API until you have manually published with the new visibility at least once.
-#      - name: Publish to trusted testers
+#      - name: Publish
 #        run: |
 #          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
 #            "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.CHROME_PUBLISHER_ID }}/items/${{ env.EXTENSION_ID }}:publish" \
@@ -119,7 +144,7 @@ jobs:
 #            echo "❌ Publish failed with HTTP $HTTP_CODE"
 #            exit 1
 #          fi
-#          echo "✅ Published to trusted testers"
+#          echo "✅ Published to production"
 
 #      - name: Notify Slack
 #        if: success()
@@ -129,13 +154,13 @@ jobs:
 #          webhook-type: incoming-webhook
 #          payload: |
 #            {
-#              "text": "✅ Chrome Extension (Beta) submitted for review.\nTag: ${{ github.ref_name }} | Commit: ${{ github.sha }}\nReview may take hours to days. Check status in the Chrome Web Store dashboard, or the extension will auto-update once approved."
+#              "text": "✅ Chrome Extension (Prod) submitted for review.\nTag: ${{ github.ref_name }} | Commit: ${{ github.sha }}\nReview may take hours to days. Check status in the Chrome Web Store dashboard, or the extension will auto-update once approved."
 #            }
 
   cleanup:
     name: Cleanup release and tag on failure
     runs-on: ubuntu-latest
-    needs: [build, upload]
+    needs: [check-beta, build, upload]
     if: failure()
     permissions:
       contents: write
