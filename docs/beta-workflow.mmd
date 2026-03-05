@@ -12,6 +12,10 @@ sequenceDiagram
     rect rgb(240, 240, 240)
         Note over GHA: Build Job
         GHA->>GHA: Checkout code
+        GHA->>GHA: Verify tag version matches .env version
+        alt Version mismatch
+            GHA-->>Dev: ❌ Workflow fails
+        end
         GHA->>GHA: yarn install
         GHA->>GHA: Run build-extension.sh<br/>(load .env → Vite build → zip)
         GHA->>GHA: Upload artifact

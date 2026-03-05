@@ -22,7 +22,12 @@ sequenceDiagram
 
     rect rgb(240, 240, 240)
         Note over GHA: Build Job
-        GHA->>GHA: Checkout → install → build → zip → upload artifact
+        GHA->>GHA: Checkout code
+        GHA->>GHA: Verify tag version matches .env version
+        alt Version mismatch
+            GHA-->>Dev: ❌ Workflow fails
+        end
+        GHA->>GHA: yarn install → build → zip → upload artifact
     end
 
     rect rgb(240, 240, 240)
