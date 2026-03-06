@@ -1044,7 +1044,7 @@ __metadata:
   dependencies:
     "@changesets/cli": ^2.27.1
     npm-run-all: ^4.1.5
-    snyk: ^1.1297.3
+    snyk: ^1.1303.1
   languageName: unknown
   linkType: soft
 
@@ -3215,15 +3215,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"snyk@npm:^1.1297.3":
-  version: 1.1303.0
-  resolution: "snyk@npm:1.1303.0"
+"snyk@npm:^1.1303.1":
+  version: 1.1303.1
+  resolution: "snyk@npm:1.1303.1"
   dependencies:
     "@sentry/node": ^7.36.0
     global-agent: ^3.0.0
   bin:
     snyk: bin/snyk
-  checksum: fe0c40c686ca0fa2ce54b13362521d9afcb2a1775b8b2af53b1bb73fbe1c9035bb4ca24b0ed75af46cfe6f7f7937d2fae9c94ddf7a81a3e9bfd0d9220cd2affd
+  checksum: 3491766eb9c674d9fd877bb9d714137a289c4c0dfaa1540ea8464404cfdf4e3350120c2706c7200ad30e9f9cbf6c756fc6c974cbfbaff05290680134d5dfda4a
   languageName: node
   linkType: hard
 
