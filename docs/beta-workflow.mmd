@@ -4,6 +4,7 @@ sequenceDiagram
     participant GHA as GitHub Actions
     participant OAuth as Google OAuth
     participant CWS as Chrome Web Store API v2
+    participant Slack as Slack
 
     Dev->>GH: Create release (tag: beta-v1.0.1)
     GH->>GHA: Trigger beta-upload-and-publish workflow
@@ -26,6 +27,9 @@ sequenceDiagram
         OAuth-->>GHA: Access token
         GHA->>CWS: curl POST /items/:upload (extension-dist.zip)
         CWS-->>GHA: Upload success
+        GHA->>CWS: curl POST /items/:publish
+        CWS-->>GHA: Publish success
+        GHA->>Slack: Notify deployment result
     end
 
     alt Any job fails
