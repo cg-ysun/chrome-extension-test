@@ -37,6 +37,7 @@ Total time to deploy = 30 sec
 5. Clear track of who deployed what at when
 6. Submission status via GitHub Actions
 7. Automatic cleanup if the process fails
+8. Slack notifications
 
 ### What NOT supported
 Anything requires manual confirmation like rollback, update metadata, etc.
@@ -46,19 +47,24 @@ This is limited by the CWS API.
 
 ### Beta
 
-1. Go to **Create a new release**
-2. Create a new tag: `beta-v1.0.1`
+1. Go to **Release** -> **Draft a new release**
+2. Create a new tag: `beta-v1.0.1`, version must match the manifest version
 3. Choose the target commit
 4. Publish the release
 
 ### Production
 
-1. Go to **Create a new release**
-2. Create a new tag: `v1.0.1`
+1. Go to **Release** -> **Draft a new release**
+2. Create a new tag: `v1.0.1`, version must match the manifest version
 3. Choose the target commit
 4. Publish the release
 
-> **Safety gate:** Prod deployment is blocked unless a matching beta release (`beta-v1.0.1`) already exists.
+> **Safety checks:** 
+> 1. The tag version must match the version in the code — so you can't accidentally deploy a mismatched version
+> 2. Prod is blocked unless a matching beta release already exists — you always have to go through beta first
+> 3. Both beta and prod tags must point to the same commit — so prod is guaranteed to deploy the same code that was tested in beta
+> 4. A release must exist — you can't just push a tag from the command line and trigger a deployment
+> 5. If anything fails, the release and tag are automatically cleaned up
 
 ## Workflow Sequence Diagrams
 
