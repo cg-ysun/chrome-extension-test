@@ -177,7 +177,7 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "✅ Chrome Extension (Prod) submitted for review.\nTag: ${{ github.ref_name }} | Commit: ${{ github.sha }}\nReview may take hours to days. Check status in the Chrome Web Store dashboard, or the extension will auto-update once approved."
+              "text": "✅ Chrome Extension (Prod) submitted for review.\nTag: ${{ github.ref_name }} | Commit: ${{ github.sha }}\nReview may take hours to days. Use GitHub Action to check status, or the extension will auto-update once approved."
             }
 
   cleanup:
