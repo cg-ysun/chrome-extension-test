@@ -1,9 +1,8 @@
 name: Beta - Upload and Publish
 
 on:
-  push:
-    tags:
-      - 'beta-v*.*.*'
+  release:
+    types: [published]
 
 env:
   EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID_BETA }}
@@ -17,6 +16,14 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Validate tag pattern
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^beta-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Tag '$GITHUB_REF_NAME' does not match expected pattern beta-v*.*.*"
+            exit 1
+          fi
+          echo "✅ Tag pattern valid: $GITHUB_REF_NAME"
+
       - name: Checkout
         uses: actions/checkout@v4
 

@@ -6,11 +6,15 @@ sequenceDiagram
     participant CWS as Chrome Web Store API v2
     participant Slack as Slack
 
-    Dev->>GH: Create release (tag: beta-v1.0.1)
+    Dev->>GH: Publish release (tag: beta-v1.0.1)
     GH->>GHA: Trigger beta-upload-and-publish workflow
 
     rect rgb(240, 240, 240)
         Note over GHA: Build Job
+        GHA->>GHA: Validate tag pattern (beta-v*.*.*)
+        alt Invalid tag pattern
+            GHA-->>Dev: ❌ Workflow fails
+        end
         GHA->>GHA: Checkout code
         GHA->>GHA: Verify tag version matches .env version
         alt Version mismatch
