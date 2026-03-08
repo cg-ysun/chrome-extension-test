@@ -1,8 +1,9 @@
 name: Prod - Upload and Publish
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*.*.*'
 
 env:
   EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID_PROD }}
@@ -16,13 +17,17 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Validate tag pattern
+      - name: Verify release exists
         run: |
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "❌ Tag '$GITHUB_REF_NAME' does not match expected pattern v*.*.*"
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}")
+          if [ "$RESPONSE" != "200" ]; then
+            echo "❌ No release found for tag ${{ github.ref_name }}"
+            echo "Please create a release via the GitHub UI instead of pushing a tag directly."
             exit 1
           fi
-          echo "✅ Tag pattern valid: $GITHUB_REF_NAME"
+          echo "✅ Release exists for tag ${{ github.ref_name }}"
 
       - name: Checkout
         uses: actions/checkout@v4

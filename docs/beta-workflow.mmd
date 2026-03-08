@@ -11,9 +11,10 @@ sequenceDiagram
 
     rect rgb(240, 240, 240)
         Note over GHA: Build Job
-        GHA->>GHA: Validate tag pattern (beta-v*.*.*)
-        alt Invalid tag pattern
-            GHA-->>Dev: ❌ Workflow fails
+        GHA->>GH: Verify release exists for tag
+        alt No release (CLI tag push)
+            GH-->>GHA: ❌ Not found
+            GHA-->>Dev: Workflow fails
         end
         GHA->>GHA: Checkout code
         GHA->>GHA: Verify tag version matches .env version
