@@ -60,7 +60,7 @@ This is limited by the CWS API.
 4. Publish the release
 
 > **Safety checks:** 
-> 1. The tag version must match the version in the code — so you can't accidentally deploy a mismatched version
+> 1. The tag version must match the manifest version in the code — so you can't accidentally deploy a mismatched version
 > 2. Prod is blocked unless a matching beta release already exists — you always have to go through beta first
 > 3. Both beta and prod tags must point to the same commit — so prod is guaranteed to deploy the same code that was tested in beta
 > 4. A release must exist — you can't just push a tag from the command line and trigger a deployment
