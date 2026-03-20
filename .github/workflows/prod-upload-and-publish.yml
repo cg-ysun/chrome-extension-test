@@ -151,23 +151,23 @@ jobs:
         # Items are always published with the existing visibility settings.
         # If you have manually changed the settings in the Developer Dashboard,
         # you won't be able to publish using the API until you have manually published with the new visibility at least once.
-#      - name: Publish
-#        run: |
-#          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-#            "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.CHROME_PUBLISHER_ID }}/items/${{ env.EXTENSION_ID }}:publish" \
-#            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}")
-#
-#          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
-#          BODY=$(echo "$RESPONSE" | sed '$d')
-#
-#          echo "HTTP status: $HTTP_CODE"
-#          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
-#
-#          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
-#            echo "❌ Publish failed with HTTP $HTTP_CODE"
-#            exit 1
-#          fi
-#          echo "✅ Published to production"
+      - name: Publish
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://chromewebstore.googleapis.com/v2/publishers/${{ secrets.CHROME_PUBLISHER_ID }}/items/${{ env.EXTENSION_ID }}:publish" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP status: $HTTP_CODE"
+          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "❌ Publish failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+          echo "✅ Published to production"
 
       - name: Notify Slack
         if: success()
